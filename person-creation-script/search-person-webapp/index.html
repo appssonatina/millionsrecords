@@ -1,0 +1,82 @@
+<html>
+<head>
+    <style>
+        div {
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            margin-top: 5px;
+        }
+
+    </style>    
+</head>
+<body>
+    <div>
+        <form action="/search" method="post">
+            <div>
+                <label for="searchName">Names: </label>
+                <input id="searchName" name="searchName" value="<%- data.searchName %>" />
+            </div>
+            <div>
+                <label for="searchGivenNameQueryType">Type of search: </label>
+                <br/>
+                <input type="radio" name="searchGivenNameQueryType" value="0" <% if(data.searchGivenNameQueryType === 0) print("checked=\"checked\"") %>  />Equals (=)
+                <br />
+                <input type="radio" name="searchGivenNameQueryType" value="1" <% if(data.searchGivenNameQueryType === 1) print("checked=\"checked\"") %> />Starts with (John Doe%) (using LIKE operator)
+                <br />
+                <input type="radio" name="searchGivenNameQueryType" value="2" <% if(data.searchGivenNameQueryType === 2) print("checked=\"checked\"") %> />Contains (%John%Doe%) (using LIKE operator)
+                <br />
+                <input type="radio" name="searchGivenNameQueryType" value="3" <% if(data.searchGivenNameQueryType === 3) print("checked=\"checked\"") %> />Contains (*John* *Doe*) (search with FULLTEXT)
+                <br />
+                <input type="radio" name="searchGivenNameQueryType" value="4" <% if(data.searchGivenNameQueryType === 4) print("checked=\"checked\"") %> />Contains words (John+ Doe+) (search with FULLTEXT)
+                <br />
+            </div>
+
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <% if(data && data.queryResponseTime) { %>
+            <div>
+                Query response time: <%- data.queryResponseTime %> seconds
+            </div>
+        <% } %>
+
+        <% if(data && data.searchResult && data.searchResult.length > 0) { %>
+            <div>
+                Mapping to objects time: <%- data.mappingToObjectsTime %> seconds
+            </div>
+        <table style="border: 1px solid gray">
+            <thead>Found <%- data.searchResult.length %> results</thead>
+            <tbody>
+            <tr>
+                <th>Given name</th>
+                <th>Middle names</th>
+                <th>Surname</th>
+                <th>Used in search</th>
+                <th>Used in search backwards</th>
+            </tr>
+            
+            <% for(let row of data.searchResult) { %>
+                <tr>
+                    <td><%- row.givenName %></td>
+                    <td><%- row.middleNames %></td>
+                    <td><%- row.surname %></td>
+                    <td><%- row.searchFullName %></td>
+                    <td><%- row.searchFullNameBackwards %></td>
+                </tr>
+            <% } %>
+            
+            </tbody>
+        </table>
+        <% } else { %>
+            <div>No search results...</div>
+        <% } %>
+    </div>
+<!-- </body> -->
+<!-- </html> -->
